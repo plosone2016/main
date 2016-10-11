@@ -1,3 +1,26 @@
+InitSigma <- function(npar = 4, std, scale) {
+	if (missing(scale)) scale <- 2.38 ^2 / npar
+	if (missing(std)) std <- 1
+	Sigma <- diag(rep(std, npar)) * scale
+	return(Sigma)
+}
+
+Priors <- function(value = 1, a = 0, b = 1, 
+                   dists = c('normal', 'gamma', 'uniform'), 
+                   logp = TRUE) {
+  dists <- match.arg(dists)
+  if (value=='random') {
+    switch(dists,
+           normal   = rnorm(1, a, b),
+           gamma 	  = rgamma(1, a, b),
+           uniform 	= runif(1, a, b))
+  } else {
+    switch(dists,
+           normal   = dnorm(value, a, b, log=logp),
+           gamma 	  = dgamma(value, a, b, log=logp),
+           uniform  = dunif(value, a, b, log=logp))
+  }
+}	
 MetropolisAP <- function(
 					   Y, 		# the data
                        tData, 	# corresponding time points 
@@ -278,3 +301,4 @@ MetropolisAP <- function(
 
 	return(list(MCMC = MCMClist, Burn = Burnlist, LL = LLlist, runtime = endt))
 }
+fastMH  <- compiler::cmpfun(MetropolisAP)
