@@ -38,6 +38,7 @@ realAP  <- fastMH(Y, tData = TimePoints, vPriors = nPriors, nTunes = 10,
 ## Run robust
 ```R
 library("sn")
+source("robust.R")
 set.seed(123)
 t24 <- c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)
 data1000 <- replicate(1000, ChooseData2(t24, 10, 0.5, skew = +10), FALSE)
